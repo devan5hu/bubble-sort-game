@@ -1,7 +1,8 @@
 // Remove contextual menu when cliquing left mouse button
- $("body").bind("contextmenu", function(event) {
-    event.preventDefault();
-});
+//  $("body").bind("contextmenu", function(event) {
+//     event.preventDefault();
+// });
+
 
 // Default SVG canvas
 var drawingSize = {
@@ -18,7 +19,8 @@ var gameStarted = false;
 var gameEnded = false;
 var boxes = [];
 var tubes = [];
-
+var totalMoves = 0;
+var Playerobject = null; 
 var currentSelectedBox = null;
 
 var numberOfTubes = {
@@ -191,7 +193,7 @@ function getPos(boxes){
 	for(let i = 0; i < boxes.length; i++){
 		for(let j = 0; j < boxes[i].length; j++){
 			for(let k = 0; k < boxes[i][j].length; k++){
-				console.log(boxes[i][j][k]);
+				// console.log(boxes[i][j][k]);
 			}
 		}
 	}
@@ -208,6 +210,7 @@ function undo(){
 function checkIfGameIsEnded() {
 	Stack.push(boxes);
 	getPos(boxes);
+	totalMoves++;
 	if (gameEnded) return true;
 	for (let iRow = 0; iRow < numberOfTubes.rows; iRow++) {
 		for (let iColumn = 0; iColumn < numberOfTubes.columns; iColumn++) {
@@ -263,7 +266,26 @@ $(canvas).mousedown(function(event) {
 						currentSelectedBox = null;
 						gameEnded = checkIfGameIsEnded();
 						if (gameEnded) {
-							alert("Game Over. Click Anywhere to restart");
+							localStorage.setItem("currScore" , document.getElementById("timer").innerText);
+							var currScore =  document.getElementById("timer").innerText;
+							document.getElementById("timer").style.display = "none";
+							if(Playerobject == null){
+								var PlayerName = prompt("Well Done! Time Taken: " + localStorage.getItem("currScore") + " and Total Moves Done: " + totalMoves);
+								Playerobject = {
+									name: PlayerName,
+									moves: totalMoves,
+									score: currScore
+								}
+								// localStorage.setItem("PlayerObject" , Playerobject);
+								localStorage.setItem("name" , PlayerName);
+								localStorage.setItem("moves" , totalMoves);
+								
+
+								console.log(JSON.stringify(Playerobject));
+							}
+							else {
+								alert("Well Done! Time Taken: " + localStorage.getItem("currScore") + " and Total Moves Done: " + totalMoves + ". Your Score has been updated.")
+							}
 						}
 					}
 				}

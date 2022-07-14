@@ -4,14 +4,111 @@
 		<title>Bubble Sort!</title>
 		<meta charset="utf-8" />
 		<link rel="stylesheet" href="assets/css/index.css" />
-		<script type="application/javascript" src="assets/js/jquery-3.3.1.min.js"></script>
-		<script type="application/javascript" src="assets/js/svg.min.js"></script>
+		<script type="module">
+			// Import the functions you need from the SDKs you need
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js";
+			import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-analytics.js";
+			import { getDatabase , ref, onValue, set , push } from "https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js";
+			const firebaseConfig = {
+			  apiKey: "AIzaSyAnK4SgquFOhmnip-gUUGAxG9ugBtckxtw",
+			  authDomain: "ballsort-score.firebaseapp.com",
+			  databaseURL: "https://ballsort-score-default-rtdb.asia-southeast1.firebasedatabase.app",
+			  projectId: "ballsort-score",
+			  storageBucket: "ballsort-score.appspot.com",
+			  messagingSenderId: "1051729041871",
+			  appId: "1:1051729041871:web:563c0c94d94aaeb0229aba",
+			  measurementId: "G-WCJWP0BF0Q"
+			};
+			function showdata(data){
+			
+					global.innerHTML = data.name + " " + data.moves + " " + data.score
+			} 
+			var global = document.getElementById("globalscore");
+			var data = [];
+			const app = initializeApp(firebaseConfig);
+			const analytics = getAnalytics(app);
+			const database = getDatabase(app);
+			const db = getDatabase();
+			const ScoreRef = ref(db, '/');
+				onValue(ScoreRef, (snapshot) => {
+				    snapshot.forEach(function(childSnapshot) {
+      				var childData = childSnapshot.val();
+					global.innerHTML = childData.name + " " + childData.moves + " " + childData.score;
+    			});
+			});
+
+			$("#start").mousedown(function (event){
+				document.getElementById("start").disabled = true;
+				var timerVar = setInterval(countTimer, 1000);
+				var totalSeconds = 0;
+				function countTimer() {
+					++totalSeconds;
+					var hour = Math.floor(totalSeconds /3600);
+					var minute = Math.floor((totalSeconds - hour*3600)/60);
+					var seconds = totalSeconds - (hour*3600 + minute*60);
+					if(hour < 10){
+						hour = "0"+hour;
+						if(minute < 10)
+							minute = "0"+minute;
+						if(seconds < 10)
+							seconds = "0"+seconds;
+						document.getElementById("timer").innerHTML = hour + ":" + minute + ":" + seconds;
+					}
+				}
+			})
+			
+			function writeUserData( name , moves , currScore) {
+				push(ref(db, '/'), {
+					name: name,
+					moves: moves,
+					score: currScore
+				});
+				console.log("Done");
+			}
+			$("#save").mousedown(function(event){
+				var name = localStorage.getItem("name");
+				var moves = localStorage.getItem("moves");
+				var currScore = localStorage.getItem("currScore");
+				writeUserData(name , moves , currScore);
+			})
+		  </script>
+		<script src="assets/js/jquery-3.3.1.min.js"></script>
+		<script src="assets/js/svg.min.js"></script>
+		<script src="./assets/js/work.js"></script>
+		<script>
+			$("#start").mousedown(function f(){
+			document.getElementById("start").disabled = true;
+			var timerVar = setInterval(countTimer, 1000);
+			var totalSeconds = 0;
+			function countTimer() {
+				++totalSeconds;
+				var hour = Math.floor(totalSeconds /3600);
+				var minute = Math.floor((totalSeconds - hour*3600)/60);
+				var seconds = totalSeconds - (hour*3600 + minute*60);
+				if(hour < 10){
+					hour = "0"+hour;
+					if(minute < 10)
+						minute = "0"+minute;
+					if(seconds < 10)
+						seconds = "0"+seconds;
+					document.getElementById("timer").innerHTML = hour + ":" + minute + ":" + seconds;
+				}
+			}
+			console.log("ASDASDASDAS");
+		})
+		</script>
 	</head>
 	<body>
 		<div class="container">
+			<div id="timer"></div>
+			<div id="data"></div>
+			<div id="globalscore"></div>
+			<button id = "start" >Start Game</button>
+			<button id = "new" onclick="g()">New Game</button>
+			<button id = "save" >Save Score</button>
 			<p id = "title">Bubble Sort!</p>
 			<div id="drawing"></div>
-		</div>
-		<script type="application/javascript" src="assets/js/index.js"></script>
+		</div>s
+		<script src="assets/js/index.js"></script>
 	</body>
 </html>
