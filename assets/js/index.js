@@ -270,7 +270,7 @@ $(canvas).mousedown(function(event) {
 							var currScore =  document.getElementById("timer").innerText;
 							document.getElementById("timer").style.display = "none";
 							if(Playerobject == null){
-								var PlayerName = prompt("Well Done! Time Taken: " + localStorage.getItem("currScore") + " and Total Moves Done: " + totalMoves);
+								var PlayerName = prompt("Well Done! Time Taken: " + localStorage.getItem("currScore") + " and Total Moves Done: " + totalMoves + "If you broke the global highscore then click on \"Save Score\"");
 								Playerobject = {
 									name: PlayerName,
 									moves: totalMoves,
